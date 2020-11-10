@@ -7,6 +7,8 @@ function MyPosts() {
         { id: '2', message: 'Я ждун))', likesCount: '10' },
     ];
 
+    let posts = postsData.map( (p) =><Post message={p.message} likesCount={p.likesCount}/>)
+
     return (
         <div className={s.postsBlock}>
             <h2>MyPosts</h2>
@@ -20,14 +22,7 @@ function MyPosts() {
                 my post
                 <div>new post</div>
                 <div className={s.posts}>
-                    <Post
-                        message={postsData[0].message}
-                        likesCount={postsData[0].likesCount}
-                    />
-                    <Post
-                        message={postsData[1].message}
-                        likesCount={postsData[1].likesCount}
-                    />
+                    {posts}
                 </div>
             </div>
         </div>
