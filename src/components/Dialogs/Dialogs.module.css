@@ -8,8 +8,13 @@ padding: 10px;
 
 }
 
-.dialogs .active{
-    color:white
+.dialogs a.active{
+    color:rgb(240, 220, 108);
+}
+
+.dialogs a{
+    color:white;
+    text-decoration: none;
 }
 
 .dialog{
