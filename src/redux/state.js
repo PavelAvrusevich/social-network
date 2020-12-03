@@ -1,9 +1,12 @@
+let rerender;
+
 let state = {
     profilePage: {
         posts: [
-            { id: '1', message: 'привет, как дела??', likesCount: '12' },
-            { id: '2', message: 'Я ждун))', likesCount: '10' },
+            { id: '1', message: 'привет, как дела??', likesCount: 12 },
+            { id: '2', message: 'Я ждун))', likesCount: 10 },
         ],
+        newText: '',
     },
     dialogsPage: {
         dialogs: [
@@ -29,15 +32,25 @@ let state = {
     },
 };
 
-let addPost = (postMessage) => {
-let nextPost = {
-    id:3,
-    message: postMessage,
-    likesCount: 0,
-}
-state.profilePage.posts.push(nextPost);
-}
+let addPost = () => {
+    let newPost = {
+        id: 3,
+        message: state.profilePage.newText,
+        likesCount: 0,
+    };
+    state.profilePage.posts.push(newPost);
+    state.profilePage.newText = '';
+    rerender(state);
+};
 
-export {addPost};
+let fixNewText = (changeText) => {
+    state.profilePage.newText = changeText;
+    rerender(state);
+};
 
+const subscriber = (observer) => {
+    rerender = observer;
+};
+
+export { addPost, fixNewText, subscriber };
 export default state;

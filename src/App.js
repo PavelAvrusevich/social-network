@@ -19,8 +19,9 @@ function App(props) {
                     path="/profile"
                     render={() => (
                         <Profile
-                            state={props.state.profilePage}
+                            profilePage={props.state.profilePage}
                             addPost={props.addPost}
+                            fixNewText={props.fixNewText}
                         />
                     )}
                 />
