@@ -8,8 +8,7 @@ function Profile(props) {
             <ProfileInfo />
             <MyPosts
                 profilePage={props.profilePage}
-                addPost={props.addPost}
-                fixNewText={props.fixNewText}
+                dispatch={props.dispatch}
             />
         </div>
     );
