@@ -23,6 +23,7 @@ let store = {
             ],
             newText: '',
         },
+        navbar: {},
     },
     getState() {
         return this._state;
