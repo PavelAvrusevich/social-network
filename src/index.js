@@ -6,18 +6,18 @@ import './index.css';
 import App from './App';
 import { BrowserRouter } from 'react-router-dom';
 
-let rerender = (state) => {
+let rerender = (store) => {
     ReactDOM.render(
         <BrowserRouter>
-            <App state={state} dispatch={store.dispatch.bind(store)} />
+            <App store={store} dispatch={store.dispatch.bind(store)} />
         </BrowserRouter>,
         document.getElementById('root')
     );
 };
 
-rerender(store.getState());
+rerender(store);
 
-store.subscribe(() => rerender(store.getState()));
+store.subscribe(() => rerender(store));
 
 // If you want to start measuring performance in your app, pass a function
 // to log results (for example: reportWebVitals(console.log))

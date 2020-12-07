@@ -2,29 +2,25 @@ import s from './Dialogs.module.css';
 import DialogItem from './DialogItem/DialogItem';
 import Message from './Message/Message';
 import React from 'react';
-import {
-    sendMessageCreator,
-    updateNewMessageTextCreator,
-} from '../../redux/message-reducer';
 
 function Dialogs(props) {
-    let dialogsElements = props.dialogsPage.dialogs.map((d) => (
+    let dialogsElements = props.dialogs.map((d) => (
         <DialogItem name={d.name} id={d.id} />
     ));
 
-    let messagesElements = props.dialogsPage.messages.map((m) => (
+    let messagesElements = props.messages.map((m) => (
         <Message message={m.message} />
     ));
 
-    let newText = props.dialogsPage.newText;
+    let newText = props.newText;
 
-    let updateNewMessageText = (e) => {
+    let onUpdateNewMessageText = (e) => {
         let newText = e.target.value;
-        props.dispatch(updateNewMessageTextCreator(newText));
+        props.updateNewMessageText(newText);
     };
 
-    let sendMessage = () => {
-        props.dispatch(sendMessageCreator());
+    let onSendMessage = () => {
+        props.sendMessage();
     };
 
     return (
@@ -33,11 +29,11 @@ function Dialogs(props) {
             <div className={s.messages}>
                 {messagesElements}
                 <textarea
-                    onChange={updateNewMessageText}
+                    onChange={onUpdateNewMessageText}
                     placeholder="введите сообщение"
                     value={newText}
                 ></textarea>
-                <button onClick={sendMessage}>Отправить</button>
+                <button onClick={onSendMessage}>Отправить</button>
             </div>
         </div>
     );
