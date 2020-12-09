@@ -1,38 +1,15 @@
+import * as axios from 'axios';
 import React from 'react';
 import styles from './Users.module.css';
+import userPhoto from '../../assets/images/user.png';
 
 function Users(props) {
     if (props.users.length === 0) {
-        let users = [
-            {
-                id: 1,
-                photoUrl:
-                    'https://citydog.by/content/_posts/442X361/5e2c4f627a5bc.jpeg',
-                fullName: 'Pavel',
-                status: 'learning react',
-                followed: true,
-                location: { city: 'Minsk', country: 'Belarus' },
-            },
-            {
-                id: 2,
-                photoUrl:
-                    'https://citydog.by/content/_posts/442X361/5e2c4f627a5bc.jpeg',
-                fullName: 'Andrew',
-                status: 'learning angular',
-                followed: true,
-                location: { city: 'Moscow', country: 'Russia' },
-            },
-            {
-                id: 3,
-                photoUrl:
-                    'https://citydog.by/content/_posts/442X361/5e2c4f627a5bc.jpeg',
-                fullName: 'Jack',
-                status: 'learning vue',
-                followed: false,
-                location: { city: 'Denver', country: 'USA' },
-            },
-        ];
-        props.setUsers(users);
+        axios
+            .get('https://social-network.samuraijs.com/api/1.0/users')
+            .then((response) => {
+                props.setUsers(response.data.items);
+            });
     }
 
     return (
@@ -43,7 +20,11 @@ function Users(props) {
                         <div>
                             <img
                                 className={styles.userPhoto}
-                                src={u.photoUrl}
+                                src={
+                                    u.photos.small != null
+                                        ? u.photos.small
+                                        : userPhoto
+                                }
                             />
                         </div>
                         <div>
@@ -59,12 +40,12 @@ function Users(props) {
                         </div>
                     </span>
                     <span>
-                        <div>{u.fullname}</div>
+                        <div>{u.name}</div>
                         <div>{u.status}</div>
                     </span>
                     <span>
-                        <div>{u.location.country}</div>
-                        <div>{u.location.city}</div>
+                        <div>{'u.location.country'}</div>
+                        <div>{'u.location.city'}</div>
                     </span>
                 </div>
             ))}
