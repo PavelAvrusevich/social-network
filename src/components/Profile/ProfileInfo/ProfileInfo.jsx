@@ -9,12 +9,9 @@ function ProfileInfo(props) {
 
     return (
         <div className={s.content}>
-            <div>
-                <img src="https://p.bigstockphoto.com/GeFvQkBbSLaMdpKXF1Zv_bigstock-Aerial-View-Of-Blue-Lakes-And--227291596.jpg" />
-            </div>
             <div className={s.descriptionBlock}>
-                <img src={props.profile.protos.large} />
-                ava+description
+                <img src={props.profile.photos.large} />
+                ava+description {props.profile.fullName}
             </div>
         </div>
     );
