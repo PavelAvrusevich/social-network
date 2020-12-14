@@ -31,18 +31,16 @@ let Users = (props) => {
                             <NavLink to={`/profile/${u.id}`}>
                                 <img
                                     className={styles.userPhoto}
-                                    src={
-                                        u.photos.small != null
-                                            ? u.photos.small
-                                            : userPhoto
-                                    }
+                                    src={u.photos.small != null ? u.photos.small : userPhoto}
                                 />
                             </NavLink>
                         </div>
                         <div>
                             {u.followed === false ? (
                                 <button
+                                    disabled={props.followingInProgress.some((id) => id === u.id)}
                                     onClick={() => {
+                                        props.toggleFollowingProgress(true, u.id);
                                         axios
                                             .post(
                                                 `https://social-network.samuraijs.com/api/1.0/follow/${u.id}`,
@@ -50,8 +48,7 @@ let Users = (props) => {
                                                 {
                                                     withCredentials: true,
                                                     headers: {
-                                                        'API-KEY':
-                                                            'fa2a81d2-6200-470c-be70-671507ae68f0',
+                                                        'API-KEY': 'fa2a81d2-6200-470c-be70-671507ae68f0',
                                                     },
                                                 }
                                             )
@@ -59,6 +56,7 @@ let Users = (props) => {
                                                 if (response.data.resultCode == 0) {
                                                     props.follow(u.id);
                                                 }
+                                                props.toggleFollowingProgress(false, u.id);
                                             });
                                     }}
                                 >
@@ -66,15 +64,16 @@ let Users = (props) => {
                                 </button>
                             ) : (
                                 <button
+                                    disabled={props.followingInProgress.some((id) => id === u.id)}
                                     onClick={() => {
+                                        props.toggleFollowingProgress(true, u.id);
                                         axios
                                             .delete(
                                                 `https://social-network.samuraijs.com/api/1.0/follow/${u.id}`,
                                                 {
                                                     withCredentials: true,
                                                     headers: {
-                                                        'API-KEY':
-                                                            'fa2a81d2-6200-470c-be70-671507ae68f0',
+                                                        'API-KEY': 'fa2a81d2-6200-470c-be70-671507ae68f0',
                                                     },
                                                 }
                                             )
@@ -82,6 +81,7 @@ let Users = (props) => {
                                                 if (response.data.resultCode == 0) {
                                                     props.unfollow(u.id);
                                                 }
+                                                props.toggleFollowingProgress(false, u.id);
                                             });
                                     }}
                                 >
