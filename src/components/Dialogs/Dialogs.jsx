@@ -4,13 +4,9 @@ import Message from './Message/Message';
 import React from 'react';
 
 function Dialogs(props) {
-    let dialogsElements = props.dialogs.map((d) => (
-        <DialogItem name={d.name} key={d.id} id={d.id} />
-    ));
+    let dialogsElements = props.dialogs.map((d) => <DialogItem name={d.name} key={d.id} id={d.id} />);
 
-    let messagesElements = props.messages.map((m) => (
-        <Message message={m.message} key={m.id} />
-    ));
+    let messagesElements = props.messages.map((m) => <Message message={m.message} key={m.id} />);
 
     let newText = props.newText;
 
