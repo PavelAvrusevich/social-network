@@ -1,15 +1,11 @@
-import * as axios from 'axios';
 import React from 'react';
 import { connect } from 'react-redux';
-import { userAPI } from '../../api/api';
 import {
     follow,
     setCurrentPage,
-    setTotalUsersCount,
-    setUsers,
     unfollow,
-    toggleIsFetching,
     toggleFollowingProgress,
+    getUsers,
 } from '../../redux/users-reducer';
 import Preloader from '../common/Preloader/Preloader';
 import Users from './Users';
@@ -19,23 +15,13 @@ import Users from './Users';
 
 class UsersContainer extends React.Component {
     componentDidMount() {
-        this.props.toggleIsFetching(true);
-        userAPI.getUsers(this.props.pageSize, this.props.currentPage).then((data) => {
-            this.props.toggleIsFetching(false);
-            this.props.setUsers(data.items);
-            this.props.setTotalUsersCount(data.totalCount);
-        });
+        this.props.getUsers(this.props.pageSize, this.props.currentPage);
     }
 
     //set current page from parametrs, not from props. This state property may not to update yet.
 
     onChangePage = (p) => {
-        this.props.setCurrentPage(p);
-        this.props.toggleIsFetching(true);
-        userAPI.getUsers(this.props.pageSize, p).then((data) => {
-            this.props.toggleIsFetching(false);
-            this.props.setUsers(data.items);
-        });
+        this.props.getUsers(this.props.pageSize, p);
     };
 
     render() {
@@ -51,7 +37,6 @@ class UsersContainer extends React.Component {
                     currentPage={this.props.currentPage}
                     users={this.props.users}
                     followingInProgress={this.props.followingInProgress}
-                    toggleFollowingProgress={this.props.toggleFollowingProgress}
                 />
             </>
         );
@@ -91,9 +76,6 @@ const mapStateToProps = (state) => ({
 export default connect(mapStateToProps, {
     follow,
     unfollow,
-    setUsers,
     setCurrentPage,
-    setTotalUsersCount,
-    toggleIsFetching,
-    toggleFollowingProgress,
+    getUsers,
 })(UsersContainer);

@@ -12,4 +12,10 @@ export const userAPI = {
     getUsers(pageSize = 10, currentPage = 1) {
         return instance.get(`users?count=${pageSize}&page=${currentPage}`).then((responce) => responce.data);
     },
+    follow(userId) {
+        return instance.post(`follow/${userId}`);
+    },
+    unfollow(userId) {
+        return instance.delete(`follow/${userId}`);
+    },
 };
