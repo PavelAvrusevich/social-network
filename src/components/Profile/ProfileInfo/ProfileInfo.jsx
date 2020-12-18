@@ -1,6 +1,6 @@
-import { NavLink } from 'react-router-dom';
 import Preloader from '../../common/Preloader/Preloader';
 import s from './ProfileInfo.module.css';
+import ProfileStatus from './Status/Status';
 
 function ProfileInfo(props) {
     if (!props.profile) {
@@ -13,6 +13,7 @@ function ProfileInfo(props) {
                 <img src={props.profile.photos.large} />
                 ava+description {props.profile.fullName}
             </div>
+            <ProfileStatus status={'здесь мог быть ваш статус'} />
         </div>
     );
 }
