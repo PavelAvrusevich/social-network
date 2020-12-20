@@ -1,6 +1,6 @@
 import Preloader from '../../common/Preloader/Preloader';
 import s from './ProfileInfo.module.css';
-import ProfileStatus from './Status/Status';
+import ProfileStatus from './Status/ProfileStatus';
 
 function ProfileInfo(props) {
     if (!props.profile) {
@@ -13,7 +13,7 @@ function ProfileInfo(props) {
                 <img src={props.profile.photos.large} />
                 ava+description {props.profile.fullName}
             </div>
-            <ProfileStatus status={'здесь мог быть ваш статус'} />
+            <ProfileStatus status={props.status} updateStatus={props.updateStatus} />
         </div>
     );
 }
