@@ -1,12 +1,15 @@
-import { ErrorMessage, Field, Form, Formik } from 'formik';
+import { Form, Formik } from 'formik';
 import React from 'react';
+import { connect } from 'react-redux';
 import * as Yup from 'yup';
+import { MyCheckbox, MyTextInput } from '../common/MyFormikFields/MyFormikFields';
+import { login } from '../../redux/auth-reducer';
 
 let Login = (props) => {
     return (
         <Formik
             initialValues={{
-                name: '',
+                email: '',
                 password: '',
                 rememberMe: false,
             }}
@@ -14,36 +17,23 @@ let Login = (props) => {
                 name: Yup.string().max(3, 'Max name length is 15 symbols').required('Required'),
                 password: Yup.string().max(10, 'Max password length is 10 symbols').required('Required'),
             })}
-            onSubmit={(values) => {}}
+            onSubmit={({ email, password, rememberMe }) => {
+                props.login(email, password, rememberMe);
+            }}
         >
             <Form>
-                <div>
-                    <label htmlFor={'name'}> Your name </label>
-                </div>
-                <div>
-                    <Field name={'name'} placeholder={'Enter your name'} type={'text'} />
-                </div>
-                <div>
-                    <ErrorMessage name={'name'} />
-                </div>
-                <div>
-                    <label htmlFor={'password'}> Your password </label>
-                </div>
-                <div>
-                    <Field name={'password'} placeholder={'Enter password'} type={'password'} />
-                </div>
-                <div>
-                    <ErrorMessage name={'password'} />
-                </div>
-                <div>
-                    <input type={'checkbox'} name={'rememberMe'} /> rememberMe
-                </div>
-                <div>
-                    <button type={'submit'}> LOGIN </button>
-                </div>
+                <MyTextInput label="Your email" name="email" placeholder="Enter your email" type="text" />
+                <MyTextInput
+                    label="Your password"
+                    name="password"
+                    placeholder="Enter password"
+                    type="password"
+                />
+                <MyCheckbox name="rememberMe">rememberMe</MyCheckbox>
+                <button type="submit"> LOGIN </button>
             </Form>
         </Formik>
     );
 };
 
-export default Login;
+export default connect(null, { login })(Login);

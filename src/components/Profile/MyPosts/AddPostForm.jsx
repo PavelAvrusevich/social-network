@@ -1,5 +1,7 @@
 import React from 'react';
 import { Field, Form, Formik } from 'formik';
+import * as Yup from 'yup';
+import { MyTextarea } from '../../common/MyFormikFields/MyFormikFields';
 
 function AddPostForm(props) {
     return (
@@ -7,10 +9,13 @@ function AddPostForm(props) {
             initialValues={{
                 newPostBody: '',
             }}
+            validationSchema={Yup.object({
+                newPostBody: Yup.string().max(10, 'Max post length is 10 symbols'),
+            })}
             onSubmit={(values) => props.addPost(values.newPostBody)}
         >
             <Form>
-                <Field name="newPostBody" as="textarea" placeholder="Введите текст поста" />
+                <MyTextarea name="newPostBody" placeholder="Введите текст поста" />
                 <button type="submit">Add post</button>
             </Form>
         </Formik>
