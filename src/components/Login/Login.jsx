@@ -4,8 +4,12 @@ import { connect } from 'react-redux';
 import * as Yup from 'yup';
 import { MyCheckbox, MyTextInput } from '../common/MyFormikFields/MyFormikFields';
 import { login } from '../../redux/auth-reducer';
+import { Redirect } from 'react-router-dom';
 
-let Login = (props) => {
+const Login = (props) => {
+    if (props.isAuth) {
+        return <Redirect to={'/profile'} />;
+    }
     return (
         <Formik
             initialValues={{
@@ -14,26 +18,35 @@ let Login = (props) => {
                 rememberMe: false,
             }}
             validationSchema={Yup.object({
-                name: Yup.string().max(3, 'Max name length is 15 symbols').required('Required'),
+                email: Yup.string().max(50, 'Max email length is 50 symbols').required('Required'),
                 password: Yup.string().max(10, 'Max password length is 10 symbols').required('Required'),
             })}
-            onSubmit={({ email, password, rememberMe }) => {
-                props.login(email, password, rememberMe);
+            onSubmit={({ email, password, rememberMe }, { setStatus }) => {
+                props.login(email, password, rememberMe, setStatus);
             }}
         >
-            <Form>
-                <MyTextInput label="Your email" name="email" placeholder="Enter your email" type="text" />
-                <MyTextInput
-                    label="Your password"
-                    name="password"
-                    placeholder="Enter password"
-                    type="password"
-                />
-                <MyCheckbox name="rememberMe">rememberMe</MyCheckbox>
-                <button type="submit"> LOGIN </button>
-            </Form>
+            {({ isSubmitting, status }) => (
+                <Form>
+                    <MyTextInput label="Your email" name="email" placeholder="Enter your email" type="text" />
+                    <MyTextInput
+                        label="Your password"
+                        name="password"
+                        placeholder="Enter password"
+                        type="password"
+                    />
+                    <MyCheckbox name="rememberMe">rememberMe</MyCheckbox>
+                    {status && <div>Error: {status}</div>}
+                    <button disable={isSubmitting.toString()} type="submit">
+                        LOGIN
+                    </button>
+                </Form>
+            )}
         </Formik>
     );
 };
 
-export default connect(null, { login })(Login);
+const mapStateToProps = (state) => ({
+    isAuth: state.auth.isAuth,
+});
+
+export default connect(mapStateToProps, { login })(Login);
