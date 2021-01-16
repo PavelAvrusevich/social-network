@@ -3,7 +3,7 @@ import Post from './Post/Post';
 import React from 'react';
 import AddPostForm from './AddPostForm';
 
-function MyPosts(props) {
+const MyPosts = (props) => {
     let postsElements = props.posts.map((p) => <Post message={p.message} likesCount={p.likesCount} />);
 
     return (
@@ -15,6 +15,6 @@ function MyPosts(props) {
             </div>
         </div>
     );
-}
+};
 
 export default MyPosts;
