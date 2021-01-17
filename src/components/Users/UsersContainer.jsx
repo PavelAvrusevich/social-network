@@ -19,13 +19,15 @@ import Users from './Users';
 
 class UsersContainer extends React.Component {
     componentDidMount() {
-        this.props.getUsers(this.props.pageSize, this.props.currentPage);
+        const { pageSize, currentPage } = this.props;
+        this.props.getUsers(pageSize, currentPage);
     }
 
     //set current page from parametrs, not from props. This state property may not to update yet.
 
     onChangePage = (p) => {
-        this.props.getUsers(this.props.pageSize, p);
+        const { pageSize } = this.props;
+        this.props.getUsers(pageSize, p);
     };
 
     render() {
