@@ -44,7 +44,7 @@ let profileReducer = (state = initialState, action) => {
 export const addPost = (newPostBody) => ({ type: ADD_POST, newPostBody });
 export const setProfile = (profile) => ({ type: SET_PROFILE, profile });
 export const setStatus = (status) => ({ type: SET_STATUS, status });
-export const insertAvatar = (photos) => ({ type: SET_AVATAR, photos });
+export const setAvatar = (photos) => ({ type: SET_AVATAR, photos });
 
 export const getStatus = (userId) => {
     return async (dispatch) => {
@@ -73,7 +73,7 @@ export const addAvatar = (file) => {
     return async (dispatch) => {
         let response = await profileAPI.saveAvatar(file);
         if (response.data.resultCode === 0) {
-            insertAvatar(response.data.data);
+            dispatch(setAvatar(response.data.data.photos));
         }
     };
 };
