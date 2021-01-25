@@ -69,6 +69,18 @@ export const addProfile = (userId) => {
     };
 };
 
+export const saveProfile = (profile, setStatus) => {
+    return async (dispatch, getState) => {
+        const userId = getState().auth.id;
+        let response = await profileAPI.saveProfile(profile);
+        if (response.data.resultCode === 0) {
+            dispatch(addProfile(userId));
+        } else {
+            return Promise.reject(response.data.messages);
+        }
+    };
+};
+
 export const addAvatar = (file) => {
     return async (dispatch) => {
         let response = await profileAPI.saveAvatar(file);

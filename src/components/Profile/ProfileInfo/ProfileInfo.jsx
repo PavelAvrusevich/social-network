@@ -4,8 +4,9 @@ import s from './ProfileInfo.module.css';
 import ProfileStatus from './Status/ProfileStatus';
 import userPhoto from '../../../assets/images/user.png';
 import { useState } from 'react';
+import ProfileDataForm from './ProfileDataForm';
 
-const ProfileInfo = ({ profile, status, updateStatus, isOwner, addAvatar }) => {
+const ProfileInfo = ({ profile, status, updateStatus, isOwner, addAvatar, saveProfile }) => {
     let [editMode, setEditMode] = useState(false);
 
     if (!profile) {
@@ -27,7 +28,11 @@ const ProfileInfo = ({ profile, status, updateStatus, isOwner, addAvatar }) => {
                     <ProfileStatus status={status} updateStatus={updateStatus} />
                 </div>
                 {editMode ? (
-                    <ProfileDataForm profile={profile} />
+                    <ProfileDataForm
+                        initialValues={profile}
+                        saveProfile={saveProfile}
+                        setEditMode={setEditMode}
+                    />
                 ) : (
                     <ProfileData profile={profile} isOwner={isOwner} goToEditMode={setEditMode} />
                 )}
@@ -41,13 +46,16 @@ const ProfileData = ({ profile, isOwner, goToEditMode }) => {
         <div>
             {isOwner && <button onClick={() => goToEditMode(true)}>Edit</button>}
             <div>
-                <b>Full name</b>: {profile.fullName}
+                <b>Full name:</b> {profile.fullName}
             </div>
             <div>
-                <b>Looking for a job</b>: {profile.lookingForAJob}
+                <b>About me:</b> {profile.aboutMe}
             </div>
             <div>
-                <b>Professional skills</b>: {profile.lookingForAJobDescription}
+                <b>Looking for a job:</b> {profile.lookingForAJob}
+            </div>
+            <div>
+                <b>Professional skills:</b> {profile.lookingForAJobDescription}
             </div>
             <div>
                 <b>Contacts</b>:
@@ -57,10 +65,6 @@ const ProfileData = ({ profile, isOwner, goToEditMode }) => {
             </div>
         </div>
     );
-};
-
-const ProfileDataForm = ({ profile }) => {
-    return <div>Form</div>;
 };
 
 const Contact = ({ contactTitle, contactValue }) => {
