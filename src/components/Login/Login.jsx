@@ -1,4 +1,4 @@
-import { Form, Formik } from 'formik';
+import { Field, Form, Formik } from 'formik';
 import React from 'react';
 import { connect } from 'react-redux';
 import * as Yup from 'yup';
@@ -16,10 +16,12 @@ const Login = (props) => {
                 email: '',
                 password: '',
                 rememberMe: false,
+                captcha: '',
             }}
             validationSchema={Yup.object({
                 email: Yup.string().max(50, 'Max email length is 50 symbols').required('Required'),
                 password: Yup.string().max(10, 'Max password length is 10 symbols').required('Required'),
+                captcha: Yup.string().required('Required'),
             })}
             onSubmit={({ email, password, rememberMe }, { setStatus }) => {
                 props.login(email, password, rememberMe, setStatus);
@@ -36,6 +38,16 @@ const Login = (props) => {
                     />
                     <MyCheckbox name="rememberMe">rememberMe</MyCheckbox>
                     {status && <div>Error: {status}</div>}
+                    {props.captchaUrl && (
+                        <div>
+                            <div>
+                                <img src={props.captchaUrl} />
+                            </div>
+                            <div>
+                                <Field name="captcha" type="text" />
+                            </div>
+                        </div>
+                    )}
                     <button disable={isSubmitting.toString()} type="submit">
                         LOGIN
                     </button>
@@ -47,6 +59,7 @@ const Login = (props) => {
 
 const mapStateToProps = (state) => ({
     isAuth: state.auth.isAuth,
+    captchaUrl: state.auth.captchaUrl,
 });
 
 export default connect(mapStateToProps, { login })(Login);

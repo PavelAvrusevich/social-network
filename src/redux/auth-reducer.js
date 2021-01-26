@@ -1,18 +1,21 @@
 import { authAPI } from '../api/api';
 
 const SET_AUTH_DATA = '/auth/ADD_AUTH_DATA';
+const GET_CAPTCHA_URL_SUCCESED = '/auth/GET_CAPTCHA_URL_SUCCESED';
 
 let initialState = {
     id: null,
     email: null,
     login: null,
     isAuth: false,
+    captchaUrl: null,
 };
 
 let authReducer = (state = initialState, action) => {
     switch (action.type) {
         case SET_AUTH_DATA:
-            return { ...state, ...action.data };
+        case GET_CAPTCHA_URL_SUCCESED:
+            return { ...state, ...action.payload };
         default:
             return state;
     }
@@ -20,7 +23,12 @@ let authReducer = (state = initialState, action) => {
 
 export const setAuthData = (id, email, login, isAuth) => ({
     type: SET_AUTH_DATA,
-    data: { id, email, login, isAuth },
+    payload: { id, email, login, isAuth },
+});
+
+export const getCaptchaUrlSuccesed = (captchaUrl) => ({
+    type: GET_CAPTCHA_URL_SUCCESED,
+    payload: { captchaUrl },
 });
 
 export const getAuthData = () => async (dispatch) => {
@@ -31,11 +39,19 @@ export const getAuthData = () => async (dispatch) => {
     }
 };
 
+export const getCaptchaUrl = () => async (dispatch) => {
+    let response = await authAPI.getCaptchaUrl();
+    dispatch(getCaptchaUrlSuccesed(response.data.url));
+};
+
 export const login = (email, password, rememberMe, setStatus) => async (dispatch) => {
     let response = await authAPI.login(email, password, rememberMe);
     if (response.data.resultCode === 0) {
         dispatch(getAuthData());
     } else {
+        if (response.data.resultCode === 10) {
+            dispatch(getCaptchaUrl());
+        }
         let message = response.data.messages[0] || 'Some error';
         setStatus(message);
     }
@@ -44,7 +60,7 @@ export const login = (email, password, rememberMe, setStatus) => async (dispatch
 export const logout = () => async (dispatch) => {
     let response = await authAPI.logout();
     if (response.data.resultCode === 0) {
-        setAuthData(null, null, null, false);
+        dispatch(setAuthData(null, null, null, false));
     }
 };
 
