@@ -21,9 +21,9 @@ let authReducer = (state = initialState, action) => {
     }
 };
 
-export const setAuthData = (id, email, login, isAuth) => ({
+export const setAuthData = (id, email, login, isAuth, captchaUrl) => ({
     type: SET_AUTH_DATA,
-    payload: { id, email, login, isAuth },
+    payload: { id, email, login, isAuth, captchaUrl },
 });
 
 export const getCaptchaUrlSuccesed = (captchaUrl) => ({
@@ -35,7 +35,7 @@ export const getAuthData = () => async (dispatch) => {
     let response = await authAPI.me();
     if (response.data.resultCode === 0) {
         let { id, email, login } = response.data.data;
-        dispatch(setAuthData(id, email, login, true));
+        dispatch(setAuthData(id, email, login, true, null));
     }
 };
 
@@ -44,13 +44,13 @@ export const getCaptchaUrl = () => async (dispatch) => {
     dispatch(getCaptchaUrlSuccesed(response.data.url));
 };
 
-export const login = (email, password, rememberMe, setStatus) => async (dispatch) => {
-    let response = await authAPI.login(email, password, rememberMe);
+export const login = (email, password, rememberMe, captcha, setStatus) => async (dispatch) => {
+    let response = await authAPI.login(email, password, rememberMe, captcha);
     if (response.data.resultCode === 0) {
         dispatch(getAuthData());
     } else {
         if (response.data.resultCode === 10) {
-            dispatch(getCaptchaUrl());
+            await dispatch(getCaptchaUrl());
         }
         let message = response.data.messages[0] || 'Some error';
         setStatus(message);

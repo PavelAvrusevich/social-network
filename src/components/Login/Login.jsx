@@ -1,4 +1,4 @@
-import { Field, Form, Formik } from 'formik';
+import { ErrorMessage, Field, Form, Formik } from 'formik';
 import React from 'react';
 import { connect } from 'react-redux';
 import * as Yup from 'yup';
@@ -10,21 +10,27 @@ const Login = (props) => {
     if (props.isAuth) {
         return <Redirect to={'/profile'} />;
     }
+    function validateCaptcha(value) {
+        let error;
+        if (!value) {
+            error = 'Required';
+        }
+        return error;
+    }
     return (
         <Formik
             initialValues={{
                 email: '',
                 password: '',
                 rememberMe: false,
-                captcha: '',
+                captcha: null,
             }}
             validationSchema={Yup.object({
                 email: Yup.string().max(50, 'Max email length is 50 symbols').required('Required'),
                 password: Yup.string().max(10, 'Max password length is 10 symbols').required('Required'),
-                captcha: Yup.string().required('Required'),
             })}
-            onSubmit={({ email, password, rememberMe }, { setStatus }) => {
-                props.login(email, password, rememberMe, setStatus);
+            onSubmit={({ email, password, rememberMe, captcha }, { setStatus }) => {
+                props.login(email, password, rememberMe, captcha, setStatus);
             }}
         >
             {({ isSubmitting, status }) => (
@@ -44,7 +50,8 @@ const Login = (props) => {
                                 <img src={props.captchaUrl} />
                             </div>
                             <div>
-                                <Field name="captcha" type="text" />
+                                <Field name="captcha" type="text" validate={validateCaptcha} />
+                                <ErrorMessage name="captcha" />
                             </div>
                         </div>
                     )}
