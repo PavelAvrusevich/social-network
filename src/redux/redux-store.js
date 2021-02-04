@@ -5,7 +5,7 @@ import navbarReducer from './navbar-reducer';
 import profileReducer from './profile-reducer';
 import usersReducer from './users-reducer';
 import thunkMiddleware from 'redux-thunk';
-import appReducer from './app-reducer';
+import appReducer from './app-reducer.ts';
 
 let reducers = combineReducers({
     profilePage: profileReducer,

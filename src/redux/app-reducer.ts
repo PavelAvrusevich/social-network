@@ -1,13 +1,18 @@
+import { run } from 'jest';
 import { userAPI, profileAPI } from '../api/api';
 import { getAuthData } from './auth-reducer';
 
 const INITIALIZED_SUCCES = 'INITIALIZED_SUCCES';
 
-let initialState = {
+export type InitialStateType = {
+    initialized: boolean;
+};
+
+let initialState: InitialStateType = {
     initialized: false,
 };
 
-let appReducer = (state = initialState, action) => {
+let appReducer = (state = initialState, action): InitialStateType => {
     switch (action.type) {
         case INITIALIZED_SUCCES:
             return {
@@ -19,7 +24,11 @@ let appReducer = (state = initialState, action) => {
     }
 };
 
-export const initializedSucces = () => ({ type: INITIALIZED_SUCCES });
+type InitializedSuccesActionType = {
+    type: typeof INITIALIZED_SUCCES;
+};
+
+export const initializedSucces = (): InitializedSuccesActionType => ({ type: INITIALIZED_SUCCES });
 
 export const initialize = () => (dispatch) => {
     let promise = dispatch(getAuthData());
