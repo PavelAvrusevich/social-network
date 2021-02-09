@@ -2,6 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
 import { withAuthRedirect } from '../../HOC/withAuthRedirect';
+import { AppStateType } from '../../redux/redux-store';
 import {
     getCurrentPage,
     getFollowingInProgress,
@@ -11,13 +12,27 @@ import {
     getUsersReselect,
 } from '../../redux/selectors';
 import { follow, setCurrentPage, unfollow, getUsers } from '../../redux/users-reducer';
+import { UserType } from '../../types/types';
 import Preloader from '../common/Preloader/Preloader';
 import Users from './Users';
 
 //take working with server out the presentation component
 // side effects (working with server) take out in lifecicle method
 
-class UsersContainer extends React.Component {
+type Props = {
+    pageSize: number;
+    currentPage: number;
+    users: Array<UserType>;
+    totalUsersCount: number;
+    isFetching: boolean;
+    followingInProgress: Array<number>;
+
+    getUsers: (pageSize: number, pageNumber: number) => void;
+    follow: () => void;
+    unfollow: () => void;
+};
+
+class UsersContainer extends React.Component<Props> {
     componentDidMount() {
         const { pageSize, currentPage } = this.props;
         this.props.getUsers(pageSize, currentPage);
@@ -25,7 +40,7 @@ class UsersContainer extends React.Component {
 
     //set current page from parametrs, not from props. This state property may not to update yet.
 
-    onChangePage = (p) => {
+    onChangePage = (p: number) => {
         const { pageSize } = this.props;
         this.props.getUsers(pageSize, p);
     };
@@ -49,7 +64,7 @@ class UsersContainer extends React.Component {
     }
 }
 
-const mapStateToProps = (state) => ({
+const mapStateToProps = (state: AppStateType) => ({
     users: getUsersReselect(state),
     totalUsersCount: getTotalUsersCount(state),
     pageSize: getPageSize(state),

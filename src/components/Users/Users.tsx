@@ -1,16 +1,20 @@
-import React from 'react';
+import React, { FC } from 'react';
+import { UserType } from '../../types/types';
 import Paginator from '../common/Paginator/Paginator';
 import User from './User';
 
-let Users = ({
-    totalUsersCount,
-    pageSize,
-    currentPage,
-    onChangePage,
-    users,
-    followingInProgress,
-    ...props
-}) => {
+type Props = {
+    totalUsersCount: number;
+    pageSize: number;
+    currentPage: number;
+    onChangePage: (pageNumber: number) => void;
+    users: Array<UserType>;
+    followingInProgress: Array<number>;
+    follow: () => void;
+    unfollow: () => void;
+};
+
+let Users: FC<Props> = ({ totalUsersCount, pageSize, currentPage, onChangePage, users, ...props }) => {
     return (
         <div>
             <Paginator
@@ -23,7 +27,7 @@ let Users = ({
                 {users.map((u) => (
                     <User
                         user={u}
-                        followingInProgress={followingInProgress}
+                        followingInProgress={props.followingInProgress}
                         follow={props.follow}
                         unfollow={props.unfollow}
                     />
