@@ -11,7 +11,7 @@ import {
     getTotalUsersCount,
     getUsersReselect,
 } from '../../redux/selectors';
-import { follow, setCurrentPage, unfollow, getUsers } from '../../redux/users-reducer';
+import { follow, unfollow, getUsers } from '../../redux/users-reducer';
 import { UserType } from '../../types/types';
 import Preloader from '../common/Preloader/Preloader';
 import Users from './Users';
@@ -19,18 +19,22 @@ import Users from './Users';
 //take working with server out the presentation component
 // side effects (working with server) take out in lifecicle method
 
-type Props = {
+type MapStateProps = {
     pageSize: number;
     currentPage: number;
     users: Array<UserType>;
     totalUsersCount: number;
     isFetching: boolean;
     followingInProgress: Array<number>;
-
-    getUsers: (pageSize: number, pageNumber: number) => void;
-    follow: () => void;
-    unfollow: () => void;
 };
+
+type MapDispatchProps = {
+    getUsers: (pageSize: number, pageNumber: number) => void;
+    follow: (userId: number) => void;
+    unfollow: (userId: number) => void;
+};
+
+type Props = MapStateProps & MapDispatchProps;
 
 class UsersContainer extends React.Component<Props> {
     componentDidMount() {
@@ -64,7 +68,7 @@ class UsersContainer extends React.Component<Props> {
     }
 }
 
-const mapStateToProps = (state: AppStateType) => ({
+const mapStateToProps = (state: AppStateType): MapStateProps => ({
     users: getUsersReselect(state),
     totalUsersCount: getTotalUsersCount(state),
     pageSize: getPageSize(state),
@@ -95,10 +99,10 @@ const mapStateToProps = (state: AppStateType) => ({
 });*/
 
 export default compose(
-    connect(mapStateToProps, {
+    //<TStateProps = {}, TDispatchProps = {}, TOwnProps = {}, State = DefaultState>
+    connect<MapStateProps, MapDispatchProps, {}, AppStateType>(mapStateToProps, {
         follow,
         unfollow,
-        setCurrentPage,
         getUsers,
     }),
     withAuthRedirect
