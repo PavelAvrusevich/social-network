@@ -1,4 +1,5 @@
-import { authAPI } from '../api/api';
+import { ResultCodeForCaptchaEnum } from './../api/api';
+import { authAPI, ResultCodeEnum } from '../api/api';
 
 const SET_AUTH_DATA = '/auth/ADD_AUTH_DATA';
 const GET_CAPTCHA_URL_SUCCESED = '/auth/GET_CAPTCHA_URL_SUCCESED';
@@ -58,9 +59,9 @@ export const getCaptchaUrlSuccesed = (captchaUrl: string): GetCaptchaUrlSuccesed
 });
 
 export const getAuthData = () => async (dispatch: any) => {
-    let response = await authAPI.me();
-    if (response.data.resultCode === 0) {
-        let { id, email, login } = response.data.data;
+    let data = await authAPI.me();
+    if (data.resultCode === ResultCodeEnum.Succes) {
+        let { id, email, login } = data.data;
         dispatch(setAuthData(id, email, login, true, null));
     }
 };
@@ -77,14 +78,14 @@ export const login = (
     captcha: string,
     setStatus: any
 ) => async (dispatch: any) => {
-    let response = await authAPI.login(email, password, rememberMe, captcha);
-    if (response.data.resultCode === 0) {
+    let data = await authAPI.login(email, password, rememberMe, captcha);
+    if (data.resultCode === ResultCodeEnum.Succes) {
         dispatch(getAuthData());
     } else {
-        if (response.data.resultCode === 10) {
+        if (data.resultCode === ResultCodeForCaptchaEnum.CaptchaIsRequired) {
             await dispatch(getCaptchaUrl());
         }
-        let message = response.data.messages[0] || 'Some error';
+        let message = data.messages[0] || 'Some error';
         setStatus(message);
     }
 };
