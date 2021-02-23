@@ -1,16 +1,42 @@
-import { ErrorMessage, Field, Form, Formik } from 'formik';
-import React from 'react';
+import { ErrorMessage, Field, Form, Formik, FormikBag } from 'formik';
+import React, { FC } from 'react';
 import { connect } from 'react-redux';
 import * as Yup from 'yup';
 import { MyCheckbox, MyTextInput } from '../common/MyFormikFields/MyFormikFields';
 import { login } from '../../redux/auth-reducer';
 import { Redirect } from 'react-router-dom';
+import { AppStateType } from '../../redux/redux-store';
 
-const Login = (props) => {
+type Props = {
+    isAuth: boolean;
+    captchaUrl: string | null;
+    login: (
+        email: string,
+        password: string,
+        rememberMe: boolean,
+        captcha: string | null,
+        setStatus: any
+    ) => Promise<void>;
+};
+
+type InitialValuesType = {
+    email: string;
+    password: string;
+    rememberMe: boolean;
+    captcha: null | string;
+};
+
+const Login: FC<Props> = (props) => {
     if (props.isAuth) {
         return <Redirect to={'/profile'} />;
     }
-    function validateCaptcha(value) {
+    const initialValues: InitialValuesType = {
+        email: '',
+        password: '',
+        rememberMe: false,
+        captcha: null,
+    };
+    function validateCaptcha(value: string) {
         let error;
         if (!value) {
             error = 'Required';
@@ -19,18 +45,13 @@ const Login = (props) => {
     }
     return (
         <Formik
-            initialValues={{
-                email: '',
-                password: '',
-                rememberMe: false,
-                captcha: null,
-            }}
+            initialValues={initialValues}
             validationSchema={Yup.object({
                 email: Yup.string().max(50, 'Max email length is 50 symbols').required('Required'),
                 password: Yup.string().max(10, 'Max password length is 10 symbols').required('Required'),
             })}
-            onSubmit={({ email, password, rememberMe, captcha }, { setStatus }) => {
-                props.login(email, password, rememberMe, captcha, setStatus);
+            onSubmit={({ email, password, rememberMe, captcha }, { setSubmitting, setStatus }) => {
+                props.login(email, password, rememberMe, captcha, setStatus).then(() => setSubmitting(false));
             }}
         >
             {({ isSubmitting, status }) => (
@@ -55,7 +76,7 @@ const Login = (props) => {
                             </div>
                         </div>
                     )}
-                    <button disable={isSubmitting.toString()} type="submit">
+                    <button disabled={isSubmitting} type="submit">
                         LOGIN
                     </button>
                 </Form>
@@ -64,7 +85,7 @@ const Login = (props) => {
     );
 };
 
-const mapStateToProps = (state) => ({
+const mapStateToProps = (state: AppStateType) => ({
     isAuth: state.auth.isAuth,
     captchaUrl: state.auth.captchaUrl,
 });
