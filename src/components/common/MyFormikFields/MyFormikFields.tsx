@@ -1,7 +1,15 @@
 import { useField } from 'formik';
-import React, { Children } from 'react';
+import React, { FC } from 'react';
 
-export const MyTextInput = ({ label, ...props }) => {
+type FieldProps = {
+    label?: string;
+    name: string;
+    placeholder?: string;
+    type?: string;
+    id?: string;
+};
+
+export const MyTextInput: FC<FieldProps> = ({ label, ...props }) => {
     const [field, meta] = useField(props);
     return (
         <>
@@ -18,7 +26,7 @@ export const MyTextInput = ({ label, ...props }) => {
     );
 };
 
-export const MyTextarea = ({ label, ...props }) => {
+export const MyTextarea: FC<FieldProps> = ({ label, ...props }) => {
     const [field, meta] = useField(props);
     return (
         <>
@@ -35,7 +43,7 @@ export const MyTextarea = ({ label, ...props }) => {
     );
 };
 
-export const MyCheckbox = ({ children, ...props }) => {
+export const MyCheckbox: FC<FieldProps> = ({ children, ...props }) => {
     const [field, meta] = useField({ ...props, type: 'checkbox' });
     return (
         <>
