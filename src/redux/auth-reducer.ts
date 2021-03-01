@@ -1,5 +1,6 @@
-import { ResultCodeForCaptchaEnum } from './../api/api';
-import { authAPI, ResultCodeEnum } from '../api/api';
+import { ResultCodeForCaptchaEnum } from '../api/api';
+import { ResultCodeEnum } from '../api/api';
+import { authAPI } from '../api/auth-api';
 
 const SET_AUTH_DATA = '/auth/ADD_AUTH_DATA';
 const GET_CAPTCHA_URL_SUCCESED = '/auth/GET_CAPTCHA_URL_SUCCESED';

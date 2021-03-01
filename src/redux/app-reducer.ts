@@ -1,5 +1,6 @@
 import { run } from 'jest';
-import { userAPI, profileAPI } from '../api/api';
+import { profileAPI } from '../api/profile-api';
+import { userAPI } from '../api/user-api';
 import { getAuthData } from './auth-reducer';
 
 const INITIALIZED_SUCCES = 'INITIALIZED_SUCCES';

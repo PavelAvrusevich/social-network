@@ -1,4 +1,3 @@
-import { userAPI } from '../../../api/api';
 import Preloader from '../../common/Preloader/Preloader';
 import s from './ProfileInfo.module.css';
 import ProfileStatus from './Status/ProfileStatus';
