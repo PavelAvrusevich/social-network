@@ -1,15 +1,15 @@
-import { instance, GetItemsType } from './api';
+import { instance, GetItemsType, ResponseType } from './api';
 
 export const userAPI = {
     getUsers(pageSize = 10, currentPage = 1) {
         return instance
             .get<GetItemsType>(`users?count=${pageSize}&page=${currentPage}`)
-            .then((responce) => responce.data);
+            .then((response) => response.data);
     },
     follow(userId: number) {
-        return instance.post(`follow/${userId}`);
+        return instance.post<ResponseType>(`follow/${userId}`).then((res) => res.data);
     },
     unfollow(userId: number) {
-        return instance.delete(`follow/${userId}`);
+        return instance.delete<ResponseType>(`follow/${userId}`);
     },
 };

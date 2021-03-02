@@ -68,14 +68,14 @@ export const setAvatar = (photos: PhotosType): SetAvatarActionType => ({ type: S
 export const getStatus = (userId: number) => {
     return async (dispatch: any) => {
         let response = await profileAPI.getStatus(userId);
-        dispatch(setStatus(response.data));
+        dispatch(setStatus(response));
     };
 };
 
 export const updateStatus = (status: string) => {
     return async (dispatch: any) => {
         let response = await profileAPI.updateStatus(status);
-        if (response.data.resultCode === 0) {
+        if (response.resultCode === 0) {
             dispatch(setStatus(status));
         }
     };
@@ -84,7 +84,7 @@ export const updateStatus = (status: string) => {
 export const addProfile = (userId: number) => {
     return async (dispatch: any) => {
         let response = await profileAPI.getProfile(userId);
-        dispatch(setProfile(response.data));
+        dispatch(setProfile(response));
     };
 };
 
@@ -92,10 +92,10 @@ export const saveProfile = (profile: ProfileType, setStatus: any) => {
     return async (dispatch: any, getState: any) => {
         const userId = getState().auth.id;
         let response = await profileAPI.saveProfile(profile);
-        if (response.data.resultCode === 0) {
+        if (response.resultCode === 0) {
             dispatch(addProfile(userId));
         } else {
-            return Promise.reject(response.data.messages);
+            return Promise.reject(response.messages);
         }
     };
 };
@@ -103,8 +103,8 @@ export const saveProfile = (profile: ProfileType, setStatus: any) => {
 export const addAvatar = (file: any) => {
     return async (dispatch: any) => {
         let response = await profileAPI.saveAvatar(file);
-        if (response.data.resultCode === 0) {
-            dispatch(setAvatar(response.data.data.photos));
+        if (response.resultCode === 0) {
+            dispatch(setAvatar(response.data.photos));
         }
     };
 };

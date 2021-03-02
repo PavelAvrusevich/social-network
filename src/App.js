@@ -2,7 +2,7 @@ import React from 'react';
 import './App.css';
 import HeaderContainer from './components/Header/HeaderContainer';
 import Navbar from './components/Navbar/Navbar';
-import { BrowserRouter, Route, withRouter } from 'react-router-dom';
+import { BrowserRouter, Redirect, Route, withRouter } from 'react-router-dom';
 import UsersContainer from './components/Users/UsersContainer';
 import Login from './components/Login/Login';
 import { initialize } from './redux/app-reducer.ts';
@@ -28,6 +28,9 @@ class App extends React.Component {
                 <HeaderContainer />
                 <Navbar />
                 <div className="app-wrapper-content">
+                    <Route exact path="/">
+                        <Redirect to="/profile" />
+                    </Route>
                     <Route path="/dialogs" render={withSuspense(DialogsContainer)} />
                     <Route path="/profile/:userId?" render={withSuspense(ProfileContainer)} />
                     <Route path="/users" render={() => <UsersContainer />} />

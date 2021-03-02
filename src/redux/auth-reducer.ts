@@ -69,7 +69,7 @@ export const getAuthData = () => async (dispatch: any) => {
 
 export const getCaptchaUrl = () => async (dispatch: any) => {
     let response = await authAPI.getCaptchaUrl();
-    dispatch(getCaptchaUrlSuccesed(response.data.url));
+    dispatch(getCaptchaUrlSuccesed(response.url));
 };
 
 export const login = (

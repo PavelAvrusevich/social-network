@@ -1,21 +1,19 @@
+import { InferActionsTypes } from './redux-store';
 import { run } from 'jest';
 import { profileAPI } from '../api/profile-api';
 import { userAPI } from '../api/user-api';
 import { getAuthData } from './auth-reducer';
 
-const INITIALIZED_SUCCES = 'INITIALIZED_SUCCES';
-
-export type InitialStateType = {
-    initialized: boolean;
-};
-
-let initialState: InitialStateType = {
+let initialState = {
     initialized: false,
 };
 
-let appReducer = (state = initialState, action: any): InitialStateType => {
+export type InitialStateType = typeof initialState;
+export type ActionsType = InferActionsTypes<typeof actions>;
+
+let appReducer = (state = initialState, action: ActionsType): InitialStateType => {
     switch (action.type) {
-        case INITIALIZED_SUCCES:
+        case 'SN/APP/INITIALIZED_SUCCES':
             return {
                 ...state,
                 initialized: true,
@@ -25,15 +23,13 @@ let appReducer = (state = initialState, action: any): InitialStateType => {
     }
 };
 
-type InitializedSuccesActionType = {
-    type: typeof INITIALIZED_SUCCES;
+export const actions = {
+    initializedSucces: () => ({ type: 'SN/APP/INITIALIZED_SUCCES' } as const),
 };
-
-export const initializedSucces = (): InitializedSuccesActionType => ({ type: INITIALIZED_SUCCES });
 
 export const initialize = () => (dispatch: any) => {
     let promise = dispatch(getAuthData());
-    promise.then(() => dispatch(initializedSucces()));
+    promise.then(() => dispatch(actions.initializedSucces()));
 };
 
 export default appReducer;

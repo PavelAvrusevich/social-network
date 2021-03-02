@@ -1,26 +1,34 @@
-import { ProfileType } from '../types/types';
-import { instance } from './api';
+import { PhotosType, ProfileType } from './../types/types';
+import { instance, ResponseType } from './api';
+
+type SaveAvatarResponseType = {
+    photos: PhotosType;
+};
 
 export const profileAPI = {
     getProfile(userId: number) {
-        return instance.get(`profile/${userId}`);
+        return instance.get<ProfileType>(`profile/${userId}`).then((res) => res.data);
     },
     getStatus(userId: number) {
-        return instance.get(`profile/status/${userId}`);
+        return instance.get<string>(`profile/status/${userId}`).then((res) => res.data);
     },
     updateStatus(status: string) {
-        return instance.put(`profile/status`, { status: status });
+        return instance
+            .put<ResponseType>(`profile/status`, { status: status })
+            .then((res) => res.data);
     },
     saveAvatar(file: any) {
         let formdata = new FormData();
         formdata.append('image', file);
-        return instance.put(`profile/photo`, formdata, {
-            headers: {
-                'Content-type': 'multipart/form-data',
-            },
-        });
+        return instance
+            .put<ResponseType<SaveAvatarResponseType>>(`profile/photo`, formdata, {
+                headers: {
+                    'Content-type': 'multipart/form-data',
+                },
+            })
+            .then((res) => res.data);
     },
     saveProfile(profile: ProfileType) {
-        return instance.put(`profile`, profile);
+        return instance.put<ResponseType>(`profile`, profile).then((res) => res.data);
     },
 };
