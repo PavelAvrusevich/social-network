@@ -14,7 +14,7 @@ const ProfileDataForm = ({ initialValues, saveProfile, setEditMode }) => {
                 lookingForAJobDescription: Yup.string().required('Required'),
             })}
             onSubmit={(values, { setStatus }) => {
-                saveProfile(values, setStatus).then(
+                saveProfile(values).then(
                     () => {
                         setEditMode(false);
                     },

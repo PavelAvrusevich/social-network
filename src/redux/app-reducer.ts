@@ -8,9 +8,6 @@ let initialState = {
     initialized: false,
 };
 
-export type InitialStateType = typeof initialState;
-export type ActionsType = InferActionsTypes<typeof actions>;
-
 let appReducer = (state = initialState, action: ActionsType): InitialStateType => {
     switch (action.type) {
         case 'SN/APP/INITIALIZED_SUCCES':
@@ -31,5 +28,8 @@ export const initialize = () => (dispatch: any) => {
     let promise = dispatch(getAuthData());
     promise.then(() => dispatch(actions.initializedSucces()));
 };
+
+export type InitialStateType = typeof initialState;
+export type ActionsType = InferActionsTypes<typeof actions>;
 
 export default appReducer;
