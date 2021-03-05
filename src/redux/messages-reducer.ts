@@ -43,7 +43,7 @@ let messageReducer = (state = initialState, action: ActionsType): InitialStateTy
 };
 
 export const actions = {
-    sendMessageCreator: (newMessageBody: string) =>
+    sendMessage: (newMessageBody: string) =>
         ({
             type: 'SN/MESSAGES/SEND_MESSAGE',
             newMessageBody,

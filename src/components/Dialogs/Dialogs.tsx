@@ -3,8 +3,13 @@ import DialogItem from './DialogItem/DialogItem';
 import AddMessageForm from './AddMessageForm';
 import Message from './Message/Message';
 import React from 'react';
+import { InitialStateType } from '../../redux/messages-reducer';
 
-function Dialogs(props) {
+type OwnPropsType = {
+    dialogsPage: InitialStateType
+}
+
+const Dialogs:React.FC<OwnPropsType> = (props) => {
     let dialogsElements = props.dialogs.map((d) => <DialogItem name={d.name} key={d.id} id={d.id} />);
 
     let messagesElements = props.messages.map((m) => <Message message={m.message} key={m.id} />);
