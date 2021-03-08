@@ -3,12 +3,20 @@ import { Field, Form, Formik } from 'formik';
 import * as Yup from 'yup';
 import { MyTextarea } from '../../common/MyFormikFields/MyFormikFields';
 
-function AddPostForm(props) {
+type PropsType = {
+    addPost: (newPostBody: string) => void;
+};
+type InitialValuesType = {
+    newPostBody: string;
+};
+
+const AddPostForm: React.FC<PropsType> = (props) => {
+    const initialValues: InitialValuesType = {
+        newPostBody: '',
+    };
     return (
         <Formik
-            initialValues={{
-                newPostBody: '',
-            }}
+            initialValues={initialValues}
             validationSchema={Yup.object({
                 newPostBody: Yup.string().max(10, 'Max post length is 10 symbols'),
             })}
@@ -20,6 +28,6 @@ function AddPostForm(props) {
             </Form>
         </Formik>
     );
-}
+};
 
 export default AddPostForm;

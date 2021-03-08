@@ -1,10 +1,17 @@
 import { Form, Formik } from 'formik';
 import React from 'react';
 import * as Yup from 'yup';
+import { ProfileType } from '../../../types/types';
 import { MyCheckbox, MyTextarea, MyTextInput } from '../../common/MyFormikFields/MyFormikFields';
 import s from './ProfileDataForm.module.css';
 
-const ProfileDataForm = ({ initialValues, saveProfile, setEditMode }) => {
+type PropsType = {
+    initialValues: ProfileType;
+    saveProfile: (profile: ProfileType) => Promise<any>;
+    setEditMode: (param: boolean) => void;
+};
+
+const ProfileDataForm: React.FC<PropsType> = ({ initialValues, saveProfile, setEditMode }) => {
     return (
         <Formik
             initialValues={initialValues}

@@ -7,7 +7,7 @@ import { login } from '../../redux/auth-reducer';
 import { Redirect } from 'react-router-dom';
 import { AppStateType } from '../../redux/redux-store';
 
-type Props = {
+type PropsType = {
     isAuth: boolean;
     captchaUrl: string | null;
     login: (
@@ -26,7 +26,7 @@ type InitialValuesType = {
     captcha: null | string;
 };
 
-const Login: FC<Props> = (props) => {
+const Login: FC<PropsType> = (props) => {
     if (props.isAuth) {
         return <Redirect to={'/profile'} />;
     }

@@ -5,11 +5,11 @@ import Message from './Message/Message';
 import React from 'react';
 import { InitialStateType } from '../../redux/messages-reducer';
 
-type OwnPropsType = {
-    dialogsPage: InitialStateType
-}
+type OwnPropsType = InitialStateType & {
+    sendMessage: (newMessageBody: string) => void;
+};
 
-const Dialogs:React.FC<OwnPropsType> = (props) => {
+const Dialogs: React.FC<OwnPropsType> = (props) => {
     let dialogsElements = props.dialogs.map((d) => <DialogItem name={d.name} key={d.id} id={d.id} />);
 
     let messagesElements = props.messages.map((m) => <Message message={m.message} key={m.id} />);
@@ -23,6 +23,6 @@ const Dialogs:React.FC<OwnPropsType> = (props) => {
             </div>
         </div>
     );
-}
+};
 
 export default Dialogs;

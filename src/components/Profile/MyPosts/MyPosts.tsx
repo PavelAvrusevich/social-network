@@ -2,8 +2,17 @@ import s from './MyPosts.module.css';
 import Post from './Post/Post';
 import React from 'react';
 import AddPostForm from './AddPostForm';
+import { PostType } from '../../../types/types';
 
-const MyPosts = (props) => {
+export type MapPropsType = {
+    posts: Array<PostType>;
+};
+
+export type DispatchPropsType = {
+    addPost: (newPostBody: string) => void;
+};
+
+const MyPosts: React.FC<MapPropsType & DispatchPropsType> = (props) => {
     let postsElements = props.posts.map((p) => <Post message={p.message} likesCount={p.likesCount} />);
 
     return (

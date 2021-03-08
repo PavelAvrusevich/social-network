@@ -1,26 +1,46 @@
-import React from 'react';
+import React, { ComponentType } from 'react';
 import Profile from './Profile';
 import { connect } from 'react-redux';
 import { addProfile, getStatus, updateStatus, addAvatar, saveProfile } from '../../redux/profile-reducer';
-import { withRouter } from 'react-router-dom';
+import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { withAuthRedirect } from '../../HOC/withAuthRedirect';
 import { compose } from 'redux';
+import { ProfileType } from '../../types/types';
+import { AppStateType } from '../../redux/redux-store';
 
-class ProfileContainer extends React.Component {
+type MapStateToProps = ReturnType<typeof mapStateToProps>;
+type DispatchPropsType = {
+    updateStatus: (status: string) => void;
+    addAvatar: (file: File) => void;
+    saveProfile: (profile: ProfileType) => Promise<any>;
+    getStatus: (userId: number) => void;
+    addProfile: (userId: number) => void;
+};
+type PathParamsType = {
+    userId: string;
+};
+
+type PropsType = MapStateToProps & DispatchPropsType & RouteComponentProps<PathParamsType>;
+
+class ProfileContainer extends React.Component<PropsType> {
     refreshProfile() {
-        let userId = this.props.match.params.userId;
+        let userId: number | null = +this.props.match.params.userId;
         if (!userId) {
             userId = this.props.userId;
         }
-        this.props.addProfile(userId);
-        this.props.getStatus(userId);
+        if (!userId) {
+            console.error('ID should be exist either in URI params or in state "userId"');
+        } else {
+            this.props.addProfile(userId);
+            this.props.getStatus(userId);
+        }
     }
 
     componentDidMount() {
         this.refreshProfile();
     }
 
-    componentDidUpdate(prevProps, prevState) {
+    componentDidUpdate(prevProps: PropsType, prevState: PropsType) {
         if (this.props.match.params.userId != prevProps.match.params.userId) {
             this.refreshProfile();
         }
@@ -42,13 +62,13 @@ class ProfileContainer extends React.Component {
     }
 }
 
-const mapStateToProps = (state) => ({
+const mapStateToProps = (state: AppStateType) => ({
     profile: state.profilePage.profile,
     status: state.profilePage.status,
     userId: state.auth.id,
 });
 
-export default compose(
+export default compose<ComponentType>(
     connect(mapStateToProps, { addProfile, getStatus, updateStatus, addAvatar, saveProfile }),
     withRouter,
     withAuthRedirect

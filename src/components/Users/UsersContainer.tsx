@@ -98,7 +98,7 @@ const mapStateToProps = (state: AppStateType): MapStateProps => ({
     },
 });*/
 
-export default compose(
+export default compose<React.ComponentType>(
     //<TStateProps = {}, TDispatchProps = {}, TOwnProps = {}, State = DefaultState>
     connect<MapStateProps, MapDispatchProps, {}, AppStateType>(mapStateToProps, {
         follow,

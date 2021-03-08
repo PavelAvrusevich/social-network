@@ -5,17 +5,25 @@ import Navbar from './components/Navbar/Navbar';
 import { BrowserRouter, Redirect, Route, withRouter } from 'react-router-dom';
 import UsersContainer from './components/Users/UsersContainer';
 import Login from './components/Login/Login';
-import { initialize } from './redux/app-reducer.ts';
+import { initialize } from './redux/app-reducer';
 import { connect, Provider } from 'react-redux';
 import { compose } from 'redux';
 import Preloader from './components/common/Preloader/Preloader';
-import store from './redux/redux-store';
+import store, { AppStateType } from './redux/redux-store';
 import { withSuspense } from './HOC/withSuspense';
 
 const DialogsContainer = React.lazy(() => import('./components/Dialogs/DialogsContainer'));
 const ProfileContainer = React.lazy(() => import('./components/Profile/ProfileContainer'));
 
-class App extends React.Component {
+type PropsType = ReturnType<typeof mapStateToProps>;
+type DispatchPropsType = {
+    initialize: () => void;
+};
+
+const SuspendedDialogs = withSuspense(DialogsContainer);
+const SuspendedProfile = withSuspense(ProfileContainer);
+
+class App extends React.Component<PropsType & DispatchPropsType> {
     componentDidMount() {
         this.props.initialize();
     }
@@ -31,8 +39,8 @@ class App extends React.Component {
                     <Route exact path="/">
                         <Redirect to="/profile" />
                     </Route>
-                    <Route path="/dialogs" render={withSuspense(DialogsContainer)} />
-                    <Route path="/profile/:userId?" render={withSuspense(ProfileContainer)} />
+                    <Route path="/dialogs" render={() => <SuspendedDialogs />} />
+                    <Route path="/profile/:userId?" render={() => <SuspendedProfile />} />
                     <Route path="/users" render={() => <UsersContainer />} />
                     <Route path="/login" render={() => <Login />} />
                 </div>
@@ -40,11 +48,11 @@ class App extends React.Component {
         );
     }
 }
-const mapStateToProps = (state) => ({
+const mapStateToProps = (state: AppStateType) => ({
     initialized: state.app.initialized,
 });
 
-const AppContainer = compose(withRouter, connect(mapStateToProps, { initialize }))(App);
+const AppContainer = compose<React.ComponentType>(withRouter, connect(mapStateToProps, { initialize }))(App);
 
 const AppWithProvider = () => {
     return (

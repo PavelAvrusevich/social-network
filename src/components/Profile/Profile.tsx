@@ -1,7 +1,18 @@
+import React from 'react';
+import { ProfileType } from '../../types/types';
 import MyPostsContainer from './MyPosts/MyPostsContainer';
 import ProfileInfo from './ProfileInfo/ProfileInfo';
 
-function Profile(props) {
+type ProfilePropsType = {
+    profile: ProfileType | null;
+    status: string;
+    updateStatus: (status: string) => void;
+    isOwner: boolean;
+    addAvatar: (file: File) => void;
+    saveProfile: (profile: ProfileType) => Promise<any>;
+};
+
+const Profile: React.FC<ProfilePropsType> = (props) => {
     return (
         <div>
             <ProfileInfo
@@ -15,6 +26,6 @@ function Profile(props) {
             <MyPostsContainer />
         </div>
     );
-}
+};
 
 export default Profile;
