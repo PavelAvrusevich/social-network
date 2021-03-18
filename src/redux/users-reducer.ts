@@ -99,7 +99,7 @@ let _followUnfollowFlow = async (
 ) => {
     dispatch(actions.toggleFollowingProgress(true, userId));
     let response = await apiMethod(userId);
-    if (response.data.resultCode === 0) {
+    if (response.resultCode === 0) {
         dispatch(actionCreator(userId));
     }
     dispatch(actions.toggleFollowingProgress(false, userId));
@@ -107,13 +107,13 @@ let _followUnfollowFlow = async (
 
 export const follow = (userId: number): ThunkType => {
     return async (dispatch: DispatchType) => {
-        _followUnfollowFlow(dispatch, userId, userAPI.follow.bind(userAPI), actions.followSuccess);
+        await _followUnfollowFlow(dispatch, userId, userAPI.follow.bind(userAPI), actions.followSuccess);
     };
 };
 
 export const unfollow = (userId: number): ThunkType => {
     return async (dispatch: DispatchType) => {
-        _followUnfollowFlow(dispatch, userId, userAPI.unfollow.bind(userAPI), actions.unfollowSuccess);
+        await _followUnfollowFlow(dispatch, userId, userAPI.unfollow.bind(userAPI), actions.unfollowSuccess);
     };
 };
 

@@ -10,6 +10,6 @@ export const userAPI = {
         return instance.post<ResponseType>(`follow/${userId}`).then((res) => res.data);
     },
     unfollow(userId: number) {
-        return instance.delete<ResponseType>(`follow/${userId}`);
+        return instance.delete<ResponseType>(`follow/${userId}`).then((res) => res.data);
     },
 };
