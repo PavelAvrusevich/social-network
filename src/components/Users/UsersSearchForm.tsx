@@ -3,6 +3,7 @@ import React from 'react';
 import { FilterType } from '../../redux/users-reducer';
 
 type PropsType = {
+    filter: FilterType;
     onChangeFilter: (filter: FilterType) => void;
 };
 
