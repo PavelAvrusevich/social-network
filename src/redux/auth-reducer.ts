@@ -81,6 +81,6 @@ export const logout = (): ThunkType => async (dispatch) => {
 
 export type InitialStateType = typeof initialState;
 type ActionsType = InferActionsTypes<typeof actions>;
-type ThunkType = BaseThunkType<ActionsType>;
+export type ThunkType = BaseThunkType<ActionsType>;
 
 export default authReducer;

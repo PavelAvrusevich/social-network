@@ -1,17 +1,21 @@
 import { Form, Formik } from 'formik';
 import React from 'react';
+import { useDispatch } from 'react-redux';
 import * as Yup from 'yup';
+import { saveProfile } from '../../../redux/profile-reducer';
 import { ProfileType } from '../../../types/types';
 import { MyCheckbox, MyTextarea, MyTextInput } from '../../common/MyFormikFields/MyFormikFields';
 import s from './ProfileDataForm.module.css';
 
 type PropsType = {
     initialValues: ProfileType;
-    saveProfile: (profile: ProfileType) => Promise<any>;
     setEditMode: (param: boolean) => void;
 };
 
-const ProfileDataForm: React.FC<PropsType> = ({ initialValues, saveProfile, setEditMode }) => {
+type TDispatch = Parameters<ReturnType<typeof saveProfile>>[0];
+
+const ProfileDataForm: React.FC<PropsType> = ({ initialValues, setEditMode }) => {
+    const dispatch = useDispatch<TDispatch>();
     return (
         <Formik
             initialValues={initialValues}
@@ -21,7 +25,7 @@ const ProfileDataForm: React.FC<PropsType> = ({ initialValues, saveProfile, setE
                 lookingForAJobDescription: Yup.string().required('Required'),
             })}
             onSubmit={(values, { setStatus }) => {
-                saveProfile(values).then(
+                dispatch(saveProfile(values)).then(
                     () => {
                         setEditMode(false);
                     },

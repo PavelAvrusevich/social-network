@@ -11,11 +11,6 @@ type FormType = {
     isFriend: 'null' | 'true' | 'false';
 };
 
-const usersSearchFormValidate = (values: any) => {
-    const errors = {};
-    return errors;
-};
-
 const UsersSearchForm: React.FC<PropsType> = React.memo((props) => {
     const submit = (
         values: FormType,

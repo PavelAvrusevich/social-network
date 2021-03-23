@@ -6,6 +6,9 @@ import userPhoto from '../../../assets/images/user.png';
 import { ChangeEvent, useState } from 'react';
 import ProfileDataForm from './ProfileDataForm';
 import { ContactsType, ProfileType } from '../../../types/types';
+import { useDispatch, useSelector } from 'react-redux';
+import { AppStateType } from '../../../redux/redux-store';
+import { addAvatar, updateStatus } from '../../../redux/profile-reducer';
 
 type ProfileDataPropsType = {
     profile: ProfileType;
@@ -14,22 +17,14 @@ type ProfileDataPropsType = {
 };
 
 type ProfileInfoPropsType = {
-    profile: ProfileType | null;
-    status: string;
-    updateStatus: (status: string) => void;
     isOwner: boolean;
-    addAvatar: (file: File) => void;
-    saveProfile: (profile: ProfileType) => Promise<any>;
 };
 
-const ProfileInfo: React.FC<ProfileInfoPropsType> = ({
-    profile,
-    status,
-    updateStatus,
-    isOwner,
-    addAvatar,
-    saveProfile,
-}) => {
+const ProfileInfo: React.FC<ProfileInfoPropsType> = ({ isOwner }) => {
+    const dispatch = useDispatch();
+    const profile = useSelector((state: AppStateType) => state.profilePage.profile);
+    const status = useSelector((state: AppStateType) => state.profilePage.status);
+
     let [editMode, setEditMode] = useState(false);
 
     if (!profile) {
@@ -38,7 +33,7 @@ const ProfileInfo: React.FC<ProfileInfoPropsType> = ({
 
     const onMainProtoSelected = (e: ChangeEvent<HTMLInputElement>) => {
         if (e.target.files?.length) {
-            addAvatar(e.target.files[0]);
+            dispatch(addAvatar(e.target.files[0]));
         }
     };
 
@@ -48,14 +43,10 @@ const ProfileInfo: React.FC<ProfileInfoPropsType> = ({
                 <img src={profile.photos.large || userPhoto} className={s.mainPhoto} />
                 {isOwner && <input type="file" onChange={onMainProtoSelected} />}
                 <div>
-                    <ProfileStatus status={status} updateStatus={updateStatus} />
+                    <ProfileStatus status={status} />
                 </div>
                 {editMode ? (
-                    <ProfileDataForm
-                        initialValues={profile}
-                        saveProfile={saveProfile}
-                        setEditMode={setEditMode}
-                    />
+                    <ProfileDataForm initialValues={profile} setEditMode={setEditMode} />
                 ) : (
                     <ProfileData profile={profile} isOwner={isOwner} goToEditMode={setEditMode} />
                 )}

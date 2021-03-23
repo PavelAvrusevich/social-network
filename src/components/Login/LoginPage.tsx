@@ -1,23 +1,15 @@
 import { ErrorMessage, Field, Form, Formik, FormikBag } from 'formik';
 import React, { FC } from 'react';
-import { connect } from 'react-redux';
+import { connect, useDispatch, useSelector } from 'react-redux';
 import * as Yup from 'yup';
 import { MyCheckbox, MyTextInput } from '../common/MyFormikFields/MyFormikFields';
-import { login } from '../../redux/auth-reducer';
 import { Redirect } from 'react-router-dom';
 import { AppStateType } from '../../redux/redux-store';
+import { login, ThunkType } from '../../redux/auth-reducer';
+import { ThunkDispatch } from 'redux-thunk';
+import { ActionsType } from '../../redux/app-reducer';
 
-type PropsType = {
-    isAuth: boolean;
-    captchaUrl: string | null;
-    login: (
-        email: string,
-        password: string,
-        rememberMe: boolean,
-        captcha: string | null,
-        setStatus: any
-    ) => Promise<void>;
-};
+type PropsType = {};
 
 type InitialValuesType = {
     email: string;
@@ -26,8 +18,12 @@ type InitialValuesType = {
     captcha: null | string;
 };
 
-const Login: FC<PropsType> = (props) => {
-    if (props.isAuth) {
+type TDispatch = Parameters<ReturnType<typeof login>>[0];
+export const LoginPage: FC<PropsType> = (props) => {
+    const dispatch = useDispatch<TDispatch>();
+    const isAuth = useSelector((state: AppStateType) => state.auth.isAuth);
+    const captchaUrl = useSelector((state: AppStateType) => state.auth.captchaUrl);
+    if (isAuth) {
         return <Redirect to={'/profile'} />;
     }
     const initialValues: InitialValuesType = {
@@ -36,13 +32,13 @@ const Login: FC<PropsType> = (props) => {
         rememberMe: false,
         captcha: null,
     };
-    function validateCaptcha(value: string) {
+    const validateCaptcha = (value: string) => {
         let error;
         if (!value) {
             error = 'Required';
         }
         return error;
-    }
+    };
     return (
         <Formik
             initialValues={initialValues}
@@ -51,7 +47,9 @@ const Login: FC<PropsType> = (props) => {
                 password: Yup.string().max(10, 'Max password length is 10 symbols').required('Required'),
             })}
             onSubmit={({ email, password, rememberMe, captcha }, { setSubmitting, setStatus }) => {
-                props.login(email, password, rememberMe, captcha, setStatus).then(() => setSubmitting(false));
+                dispatch(login(email, password, rememberMe, captcha, setStatus)).then(() =>
+                    setSubmitting(false)
+                );
             }}
         >
             {({ isSubmitting, status }) => (
@@ -65,10 +63,10 @@ const Login: FC<PropsType> = (props) => {
                     />
                     <MyCheckbox name="rememberMe">rememberMe</MyCheckbox>
                     {status && <div>Error: {status}</div>}
-                    {props.captchaUrl && (
+                    {captchaUrl && (
                         <div>
                             <div>
-                                <img src={props.captchaUrl} />
+                                <img src={captchaUrl} />
                             </div>
                             <div>
                                 <Field name="captcha" type="text" validate={validateCaptcha} />
@@ -84,10 +82,3 @@ const Login: FC<PropsType> = (props) => {
         </Formik>
     );
 };
-
-const mapStateToProps = (state: AppStateType) => ({
-    isAuth: state.auth.isAuth,
-    captchaUrl: state.auth.captchaUrl,
-});
-
-export default connect(mapStateToProps, { login })(Login);

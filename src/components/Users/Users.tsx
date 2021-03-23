@@ -1,26 +1,40 @@
-import React, { FC } from 'react';
-import { FilterType } from '../../redux/users-reducer';
-import { UserType } from '../../types/types';
+import React, { FC, useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import {
+    getCurrentPage,
+    getFilter,
+    getFollowingInProgress,
+    getPageSize,
+    getTotalUsersCount,
+    getUsersReselect,
+} from '../../redux/selectors';
+import { FilterType, follow, getUsers, unfollow } from '../../redux/users-reducer';
 import Paginator from '../common/Paginator/Paginator';
 import User from './User';
 import UsersSearchForm from './UsersSearchForm';
 
-type Props = {
-    totalUsersCount: number;
-    pageSize: number;
-    currentPage: number;
-    onChangePage: (pageNumber: number) => void;
-    users: Array<UserType>;
-    followingInProgress: Array<number>;
-    follow: (userId: number) => void;
-    unfollow: (userId: number) => void;
-    onChangeFilter: (filter: FilterType) => void;
-};
+type PropsType = {};
 
-let Users: FC<Props> = ({ totalUsersCount, pageSize, currentPage, onChangePage, users, ...props }) => {
+let Users: FC<PropsType> = (props) => {
+    const dispatch = useDispatch();
+    const pageSize = useSelector(getPageSize);
+    const currentPage = useSelector(getCurrentPage);
+    const filter = useSelector(getFilter);
+    const users = useSelector(getUsersReselect);
+    const totalUsersCount = useSelector(getTotalUsersCount);
+    const followingInProgress = useSelector(getFollowingInProgress);
+    const onChangeFilter = (filter: FilterType) => {
+        dispatch(getUsers(pageSize, 1, filter));
+    };
+    const onChangePage = (p: number) => {
+        dispatch(getUsers(pageSize, p, filter));
+    };
+    useEffect(() => {
+        dispatch(getUsers(pageSize, currentPage, filter));
+    }, []);
     return (
         <div>
-            <UsersSearchForm onChangeFilter={props.onChangeFilter} />
+            <UsersSearchForm onChangeFilter={onChangeFilter} />
             <Paginator
                 totalItemsCount={totalUsersCount}
                 pageSize={pageSize}
@@ -31,9 +45,9 @@ let Users: FC<Props> = ({ totalUsersCount, pageSize, currentPage, onChangePage, 
                 {users.map((u) => (
                     <User
                         user={u}
-                        followingInProgress={props.followingInProgress}
-                        follow={props.follow}
-                        unfollow={props.unfollow}
+                        followingInProgress={followingInProgress}
+                        follow={follow}
+                        unfollow={unfollow}
                     />
                 ))}
             </div>
