@@ -14,9 +14,9 @@ import User from './User';
 import UsersSearchForm from './UsersSearchForm';
 import { useHistory } from 'react-router';
 import * as queryString from 'querystring';
-
+// reload of page works incorrect.
 type PropsType = {};
-type parametersObjType = {
+type QueryParamsType = {
     term?: string;
     friend?: string;
     page?: string;
@@ -36,53 +36,37 @@ let Users: FC<PropsType> = (props) => {
     const onChangePage = (p: number) => {
         dispatch(getUsers(pageSize, p, filter));
     };
-    useEffect(() => {
-        dispatch(getUsers(pageSize, currentPage, filter));
-    }, []);
 
     const history = useHistory();
     const search = history.location.search;
 
     useEffect(() => {
-        const params = queryString.parse(search.substring(1));
-        const { term, friend, page } = params;
-        const filter = {
-            term: term ? term : '',
-            isFriend: friend === 'true' ? true : friend === 'false' ? false : null,
+        const parsedParams = queryString.parse(search.substring(1));
+        let { term, friend, page } = parsedParams;
+        const filterFromString = {
+            term: term ? term : filter.term,
+            isFriend: friend === 'true' ? true : friend === 'false' ? false : filter.isFriend,
         };
-        dispatch(getUsers(pageSize, Number(page), filter as FilterType));
+        let pageNumber = !!page ? Number(page) : currentPage;
+        dispatch(getUsers(pageSize, pageNumber, filterFromString as FilterType));
     }, []);
 
     useEffect(() => {
         let { term, isFriend } = filter;
-        const parametersObj: parametersObjType = {};
+        const queryParams: QueryParamsType = {};
         if (term) {
-            parametersObj.term = term;
+            queryParams.term = term;
         }
-        let friend: string | undefined;
-        switch (isFriend) {
-            case null:
-                break;
-            case true:
-                friend = 'true';
-                break;
-            case false:
-                friend = 'false';
-                break;
-        }
-        if (friend) {
-            parametersObj.friend = friend;
-        }
+        if (isFriend !== null) queryParams.friend = String(isFriend);
         if (currentPage !== 1) {
-            parametersObj.page = String(currentPage);
+            queryParams.page = String(currentPage);
         }
-        const paramsString = '?' + queryString.stringify(parametersObj);
-        history.push({ pathname: '/users', search: paramsString });
+        history.push({ pathname: '/users', search: queryString.stringify(queryParams) });
     }, [filter, currentPage]);
 
     return (
         <div>
-            <UsersSearchForm filter={filter} onChangeFilter={onChangeFilter} />
+            <UsersSearchForm onChangeFilter={onChangeFilter} />
             <Paginator
                 totalItemsCount={totalUsersCount}
                 pageSize={pageSize}
