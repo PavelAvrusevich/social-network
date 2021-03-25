@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter, Link, withRouter } from 'react-router-dom';
+import { BrowserRouter, Link, Redirect, Route, withRouter } from 'react-router-dom';
 import { initialize } from './redux/app-reducer';
 import { connect, Provider } from 'react-redux';
 import { compose } from 'redux';
@@ -9,6 +9,9 @@ import { withSuspense } from './HOC/withSuspense';
 import { Layout, Menu, Breadcrumb } from 'antd';
 import { UserOutlined, LaptopOutlined, NotificationOutlined } from '@ant-design/icons';
 import 'antd/dist/antd.css';
+import { UsersPage } from './components/Users/UsersPage';
+import { LoginPage } from './components/Login/LoginPage';
+import HeaderContainer from './components/Header/HeaderContainer';
 
 const { SubMenu } = Menu;
 const { Header, Content, Footer, Sider } = Layout;
@@ -34,14 +37,7 @@ class App extends React.Component<PropsType & DispatchPropsType> {
         }
         return (
             <Layout>
-                <Header className="header">
-                    <div className="logo" />
-                    <Menu theme="dark" mode="horizontal" defaultSelectedKeys={['2']}>
-                        <Menu.Item key="1"></Menu.Item>
-                        <Menu.Item key="2">nav 2</Menu.Item>
-                        <Menu.Item key="3">nav 3</Menu.Item>
-                    </Menu>
-                </Header>
+                <HeaderContainer />
                 <Content style={{ padding: '0 50px' }}>
                     <Breadcrumb style={{ margin: '16px 0' }}>
                         <Breadcrumb.Item>Home</Breadcrumb.Item>
@@ -78,14 +74,22 @@ class App extends React.Component<PropsType & DispatchPropsType> {
                                 </Menu.Item>
                             </Menu>
                         </Sider>
-                        <Content style={{ padding: '0 24px', minHeight: 280 }}>Content</Content>
+                        <Content style={{ padding: '0 24px', minHeight: 280 }}>
+                            <Route exact path="/">
+                                <Redirect to="/profile" />
+                            </Route>
+                            <Route path="/dialogs" render={() => <SuspendedDialogs />} />
+                            <Route path="/profile/:userId?" render={() => <SuspendedProfile />} />
+                            <Route path="/users" render={() => <UsersPage />} />
+                            <Route path="/login" render={() => <LoginPage />} />
+                        </Content>
                     </Layout>
                 </Content>
                 <Footer style={{ textAlign: 'center' }}>©2021</Footer>
             </Layout>
             // <div className="app-wrapper">
             //     <HeaderContainer />
-            //     <Navbar />
+            //
             //     <div className="app-wrapper-content">
             //         <Route exact path="/">
             //             <Redirect to="/profile" />

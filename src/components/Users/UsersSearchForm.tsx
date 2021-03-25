@@ -1,7 +1,7 @@
 import { Field, Form, Formik } from 'formik';
 import React from 'react';
 import { useSelector } from 'react-redux';
-import { getFilter } from '../../redux/selectors';
+import { getFilter } from '../../redux/users-selectors';
 import { FilterType } from '../../redux/users-reducer';
 
 type PropsType = {

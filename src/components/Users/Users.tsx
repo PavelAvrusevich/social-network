@@ -7,7 +7,7 @@ import {
     getPageSize,
     getTotalUsersCount,
     getUsersReselect,
-} from '../../redux/selectors';
+} from '../../redux/users-selectors';
 import { FilterType, follow, getUsers, unfollow } from '../../redux/users-reducer';
 import Paginator from '../common/Paginator/Paginator';
 import User from './User';
