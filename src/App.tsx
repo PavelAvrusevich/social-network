@@ -18,6 +18,7 @@ const { Header, Content, Footer, Sider } = Layout;
 
 const DialogsContainer = React.lazy(() => import('./components/Dialogs/DialogsContainer'));
 const ProfileContainer = React.lazy(() => import('./components/Profile/ProfileContainer'));
+const ChatPage = React.lazy(() => import('./components/Pages/ChatPage/ChatPage'));
 
 type PropsType = ReturnType<typeof mapStateToProps>;
 type DispatchPropsType = {
@@ -26,6 +27,7 @@ type DispatchPropsType = {
 
 const SuspendedDialogs = withSuspense(DialogsContainer);
 const SuspendedProfile = withSuspense(ProfileContainer);
+const SuspendedChatPage = withSuspense(ChatPage);
 
 class App extends React.Component<PropsType & DispatchPropsType> {
     componentDidMount() {
@@ -67,9 +69,12 @@ class App extends React.Component<PropsType & DispatchPropsType> {
                                     <Link to="/users">Users</Link>
                                 </Menu.Item>
                                 <Menu.Item key="6">
-                                    <Link to="/News">News</Link>
+                                    <Link to="/chat">Chat</Link>
                                 </Menu.Item>
                                 <Menu.Item key="7">
+                                    <Link to="/News">News</Link>
+                                </Menu.Item>
+                                <Menu.Item key="8">
                                     <Link to="/Settings">Settings</Link>
                                 </Menu.Item>
                             </Menu>
@@ -82,6 +87,7 @@ class App extends React.Component<PropsType & DispatchPropsType> {
                             <Route path="/profile/:userId?" render={() => <SuspendedProfile />} />
                             <Route path="/users" render={() => <UsersPage />} />
                             <Route path="/login" render={() => <LoginPage />} />
+                            <Route path="/chat" render={() => <SuspendedChatPage />} />
                         </Content>
                     </Layout>
                 </Content>
